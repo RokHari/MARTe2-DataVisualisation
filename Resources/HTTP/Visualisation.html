@@ -1,21 +1,3 @@
-<!--
-  @file index_example.html 
-  @brief Source file for index_example.html
-  @date 28/03/2019
-  @author Andre' Neto
- 
-  @copyright Copyright 2015 F4E | European Joint Undertaking for ITER and
-  the Development of Fusion Energy ('Fusion for Energy').
-  Licensed under the EUPL, Version 1.1 or - as soon they will be approved
-  by the European Commission - subsequent versions of the EUPL (the "Licence")
-  You may not use this work except in compliance with the Licence.
-  You may obtain a copy of the Licence at: http://ec.europa.eu/idabc/eupl
- 
-  @warning Unless required by applicable law or agreed to in writing, 
-  software distributed under the Licence is distributed on an "AS IS"
-  basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-  or implied. See the Licence permissions and limitations under the Licence.
--->
 <html>
     <head>
         <script src="/?path=MARTeLoader.js&TextMode=1"></script>
@@ -40,11 +22,16 @@
         function loadPanels() {
             MARTeLoader.instance().load("ObjectBrowser/VisualisationApp/Data/DDB1", "Graph", "row0",
                 function(obj) {
-                    obj.setXSignalPath(["Signals", "Time"]); // Set signal source for X axis.
-                    obj.setYSignalPath(["Signals", "SinOutput1"]); // Set signal source for Y axis.
-                    obj.setDataPollingPeriod(100); // Retrieve data every 100 ms.
-                    obj.setDrawRate(5); // Redraw the graph after 5 data was received.
-                    obj.setMaxDataPoints(500); // Draw maximum of 500 points on the graph.
+                    // Set signal source for X component.
+                    obj.setXSignalPath(["Signals", "Time"]);
+                    // Set signal source for Y component.
+                    obj.setYSignalPath(["Signals", "SinOutput1"]);
+                    // Retrieve data every 100 ms.
+                    obj.setDataPollingPeriod(100);
+                    // Redraw the graph after 5 data was received.
+                    obj.setDrawRate(5);
+                    // Draw maximum of 500 points on the graph.
+                    obj.setMaxDataPoints(500);
                 }
            );
             MARTeLoader.instance().load("ObjectBrowser/VisualisationApp/Functions/SinOutputGAM2", "Graph", "row1",
@@ -57,6 +44,11 @@
                 function(obj) {
                     obj.setXSignalPath(["Signals", "Counter"]);
                     obj.setYSignalPath(["Signals", "SinOutput3"]);
+                    // Change the graph appearance: draw data points and make the line red.
+                    obj.setGraphOption({series: [{
+                        showSymbol: true,
+                        lineStyle: {color: 'red'}
+                    }]});
                 }
            );
         }

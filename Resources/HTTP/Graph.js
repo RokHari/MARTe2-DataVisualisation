@@ -19,24 +19,27 @@ class Graph extends MARTeObject {
         // Specify the configuration items for the chart
         var option = {
             yAxis: {
+                type: 'value',
                 animation: false
             },
             xAxis: {
-                animation: false,
-                data: []
+                type: 'value',
+                animation: false
             },
             series: [{
                 type: 'line',
                 showSymbol: false,
                 animation: false,
-                data: []
+                encode: {x: 'time', y: 'val'}
             }]
         };
         this.myChart.setOption(option);
         
         // Set default values.
-        this.chartDataX = [];
-        this.chartDataY = [];
+        this.sourceData = {
+            time: [],
+            val: []
+        };
         this.maxDataPoints = 100;
         this.refresh(500);
         // Redraw the graph every time data is received.
@@ -56,9 +59,9 @@ class Graph extends MARTeObject {
         }
         
         // Remove data points if limit was reached.
-        if (this.chartDataY.length == this.maxDataPoints) {
-            this.chartDataY.shift();
-            this.chartDataX.shift();
+        if (this.sourceData.val.length == this.maxDataPoints) {
+            this.sourceData.val.shift();
+            this.sourceData.time.shift();
         }
         
         // Get the signal from the received JSON.
@@ -72,8 +75,8 @@ class Graph extends MARTeObject {
         }
         
         // Append data.
-        this.chartDataX.push(xNode);
-        this.chartDataY.push(yNode);
+        this.sourceData.time.push(xNode);
+        this.sourceData.val.push(yNode);
         
         if (++this.dataCounter < this.drawRate) {
             // Wait for more data to arrive before redrawing the graph.
@@ -84,16 +87,17 @@ class Graph extends MARTeObject {
         // Redraw the graph
         this.myChart.setOption({
             xAxis: {
-                data: this.chartDataX
+                min: this.sourceData.time[0],
+                max: this.sourceData.time[this.sourceData.time.length - 1]
             },
-            series: [{
-                data: this.chartDataY
+            dataset: [{
+                source: this.sourceData
             }]
         });
     }
 
     /**
-     * Set signal to be ploted on X axis.
+     * Set signal for X component of data points.
      *
      * @param {string[]} path Signal path (example: ["InputSignals", "Time"])
      */
@@ -102,7 +106,7 @@ class Graph extends MARTeObject {
     }
 
     /**
-     * Set signal to be ploted on Y axis.
+     * Set signal for Y component of data points.
      *
      * @param {string[]} path Signal path (example: ["InputSignals", "Time"])
      */
@@ -141,5 +145,14 @@ class Graph extends MARTeObject {
      */
     setDrawRate(count) {
         this.drawRate = count;
+    }
+
+    /**
+     * Update the graph's appearance/behaviour. See Apache ECharts documentation for available options.
+     *
+     * @param {Object} option Options to be forwarded to the graph.
+     */
+    setGraphOption(option) {
+        this.myChart.setOption(option);
     }
 }
