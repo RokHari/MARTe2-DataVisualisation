@@ -21,8 +21,6 @@ $ export MARTe2_Components_DIR=$(pwd)
 
 ## Running the Example
 
-Export the two needed environment variables:
-
 Navigate to `Startup` directory within the project and run the command:
 
 `./Main.sh -l RealTimeLoader -f ../Configurations/Visualisation.cfg -m StateMachine:START`
